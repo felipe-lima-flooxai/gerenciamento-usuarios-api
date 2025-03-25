@@ -51,18 +51,20 @@ class UserController {
 
                     user.loadFromJSON(result);
 
-                    user.save();
+                    user.save().then(user=>{
+                        this.getTr(user, tr);
 
-                    this.getTr(user, tr);
+                        this.updateCount();
 
-                    this.updateCount();
+                        this.formUpdateEl.reset();
 
-                    this.formUpdateEl.reset();
+                        btn.disabled = false;
 
-                    btn.disabled = false;
+                        this.showPanelCreate();
 
-                    this.showPanelCreate();
+                    });
 
+                    
                 },
                 (e) => {
                     console.error(e);
@@ -92,14 +94,16 @@ class UserController {
                     
                     values.photo = content;
 
-                    values.save();
+                    values.save().then(user=>{
+                        this.addLine(values);
 
-                    this.addLine(values);
+                        this.formEl.reset();
 
-                    this.formEl.reset();
+                        btn.disabled = false;
 
-                    btn.disabled = false;
+                    });
 
+                    
                 }, 
                 (e) => {
                     console.error(e);
@@ -197,20 +201,9 @@ class UserController {
 
     }
 
-    selectAll(){
-
-        let ajax = new XMLHttpRequest();
-        ajax.open("GET", "/users");
-
-        //começo onload
-        ajax.onload = event => {
-            let obj = {users : []};
-            try{
-                obj = JSON.parse(ajax.responseText);
-            } catch(e){
-                console.error(e);
-            }
-            obj.users.forEach(dataUser=>{
+    selectAll(){        
+        User.getUsersStorage().then(data=>{
+            data.users.forEach(dataUser=>{
 
                 let user = new User();
     
@@ -219,9 +212,9 @@ class UserController {
                 this.addLine(user);
     
             });
-        }; //fim onload
+        });
 
-        ajax.send();
+        
 
 
     }
@@ -270,11 +263,13 @@ class UserController {
 
                 user.loadFromJSON(JSON.parse(tr.dataset.user));
 
-                user.remove();
+                user.remove().then(data=>{
+                    
+                    tr.remove();
+                    this.updateCount();
+                });
 
-                tr.remove();
-
-                this.updateCount();
+                
 
             }
 
