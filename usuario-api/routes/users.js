@@ -18,8 +18,7 @@ module.exports = (app)=>{
                 res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
             res.json({
-                users: { users
-                }
+                users
             });
             }
         });

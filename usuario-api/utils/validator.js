@@ -2,12 +2,12 @@ const { body, validationResult } = require('express-validator');
 
 module.exports = {
     userValidations: [
-        body("name")
+        body("_name")
             .notEmpty().withMessage("O nome é obrigatório.")
             .trim()
             .escape(),
             
-        body("email")
+        body("_email")
             .notEmpty().withMessage("Email é obrigatório")
             .isEmail().withMessage("Email inválido")
     ],
